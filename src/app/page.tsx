@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { db } from "@/db";
-import { unstable_noStore } from "next/cache";
 import Link from "next/link";
 import React from "react";
 import {
@@ -13,6 +11,8 @@ import {
 } from "@/components/ui/card";
 import { Room } from "@/db/schema";
 import { Github } from "lucide-react";
+import { getRooms } from "./service/rooms";
+import TagsList, { splitTags } from "@/components/TagsList";
 
 function RoomCard({ room }: { room: Room }) {
   return (
@@ -21,7 +21,8 @@ function RoomCard({ room }: { room: Room }) {
         <CardTitle>{room.name}</CardTitle>
         <CardDescription>{room.description}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-4">
+        <TagsList tags={splitTags(room.tags)} />
         {room.githubRepo && (
           <Link
             className="flex items-center gap-2"
@@ -44,8 +45,7 @@ function RoomCard({ room }: { room: Room }) {
 }
 
 export default async function Home() {
-  unstable_noStore();
-  const rooms = await db.query.room.findMany();
+  const rooms = await getRooms();
 
   return (
     <main className="min-h-screen p-16">
@@ -56,7 +56,7 @@ export default async function Home() {
         </Button>
       </div>
       <div className="grid grid-cols-3 gap-4">
-        {rooms.map((room) => {
+        {rooms.map((room: Room) => {
           return <RoomCard key={room.id} room={room} />;
         })}
       </div>
