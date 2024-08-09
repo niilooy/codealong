@@ -1,0 +1,10 @@
+implemented dark theme and wrapped the mai layout with ThemeProvider
+
+never a good idea to convert layouts and pages to use client.
+if something demands a use client implementation, export it to a component and make it use client and use it in the server component.
+
+SETUP next auth with drizzle adapter
+updated the schema with details that are required for user authentication
+created an OAuth api in GCP and used those credentials
+
+NEXTAUTH_SECRET must be added to grab session info (refer auth.ts)
