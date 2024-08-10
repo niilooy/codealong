@@ -13,7 +13,7 @@ import TagsList from "./TagsList";
 import { splitTags } from "@/lib/utils";
 import { Room, room } from "@/db/schema";
 import Link from "next/link";
-import { Github, Trash2 } from "lucide-react";
+import { Github, Pencil, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,7 +30,12 @@ import { deleteRoomAction } from "@/app/your-rooms/actions";
 const UserRoomCard = ({ room }: { room: Room }) => {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="relative">
+        <Button size={"icon"} className="absolute top-1 right-1">
+          <Link href={`/edit-room/${room.id}`}>
+            <Pencil />
+          </Link>
+        </Button>
         <CardTitle>{room.name}</CardTitle>
         <CardDescription>{room.description}</CardDescription>
       </CardHeader>

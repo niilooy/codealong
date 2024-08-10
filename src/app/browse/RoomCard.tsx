@@ -7,8 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "./ui/button";
-import TagsList from "./TagsList";
+import { Button } from "../../components/ui/button";
+import TagsList from "../../components/TagsList";
 import { splitTags } from "@/lib/utils";
 import { Room, room } from "@/db/schema";
 import Link from "next/link";

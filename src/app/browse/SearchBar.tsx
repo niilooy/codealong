@@ -41,9 +41,9 @@ const SearchBar = () => {
   const debouncedSearch = useCallback(
     debounce((value: string) => {
       if (value) {
-        router.push(`/?search=${encodeURIComponent(value)}`);
+        router.push(`/browse/?search=${encodeURIComponent(value)}`);
       } else {
-        router.push("/");
+        router.push("/browse");
       }
     }, 300),
     [router]
@@ -61,7 +61,7 @@ const SearchBar = () => {
 
   const clearSearch = () => {
     form.setValue("search", "");
-    router.push("/");
+    router.push("/browse");
   };
 
   return (
