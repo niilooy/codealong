@@ -1,10 +1,10 @@
 import { getRoom } from "@/app/service/rooms";
-import TagsList, { splitTags } from "@/components/TagsList";
-import { Badge } from "@/components/ui/badge";
+import TagsList from "@/components/TagsList";
 import { Github } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { CodealongVideoPlayer } from "./VideoPlayer";
+import { splitTags } from "@/lib/utils";
 
 const RoomPage = async (props: { params: { roomId: string } }) => {
   const roomId = props.params.roomId;

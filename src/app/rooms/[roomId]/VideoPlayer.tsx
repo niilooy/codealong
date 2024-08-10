@@ -4,6 +4,7 @@ import { Room } from "@/db/schema";
 import {
   Call,
   CallControls,
+  CallParticipantsList,
   SpeakerLayout,
   StreamCall,
   StreamTheme,
@@ -66,6 +67,7 @@ export const CodealongVideoPlayer = ({ room }: { room: Room }) => {
                   router.push("/");
                 }}
               />
+              <CallParticipantsList onClose={() => undefined}/>
             </StreamCall>
           </StreamTheme>
         </StreamVideo>

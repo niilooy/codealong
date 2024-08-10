@@ -8,7 +8,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogIn, LogOut } from "lucide-react";
@@ -19,55 +18,63 @@ import Link from "next/link";
 // better make this into a separate component.
 function AccountDropdown() {
   const session = useSession();
-  const isLoggedIn = !!session.data;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant={"link"}>
           <Avatar className="mr-2">
-            <AvatarImage
-              src={session.data?.user?.image as string}
-              alt="@shadcn"
-            />
-            <AvatarFallback>{session.data?.user?.name ?? ""}</AvatarFallback>
+            <AvatarImage src={session.data?.user?.image ?? ""} />
+            <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          {isLoggedIn ? session.data?.user?.name : `Sign In`}
+
+          {session.data?.user?.name}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuSeparator />
-        {isLoggedIn ? (
-          <DropdownMenuItem onClick={() => signOut()}>
-            <LogOut className="mr-2" /> Sign Out
-          </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem onClick={() => signIn("google")}>
-            <LogIn className="mr-2" /> Sign In
-          </DropdownMenuItem>
-        )}
+        <DropdownMenuItem
+          onClick={() =>
+            signOut({
+              callbackUrl: "/",
+            })
+          }
+        >
+          <LogOut className="mr-2" /> Sign Out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
 
-const Header = () => {
+export function Header() {
   const session = useSession();
   return (
-    // setup auth
-    <header className="bg-gray-100 py-5 dark:bg-gray-900 container mx-auto">
+    <header className="bg-gray-100 py-2 dark:bg-gray-900 container mx-auto">
       <div className="flex justify-between items-center">
-        <Link href={`/`} className="flex gap-2 items-center text-xl">
-          <Image src="./logo.svg" alt="logo" width={80} height={80} />
+        <Link
+          href="/"
+          className="flex gap-2 items-center text-xl hover:underline"
+        >
+          <Image
+            src="/logo.svg"
+            width={80}
+            height={80}
+            alt="logo"
+          />
         </Link>
 
-        <div className="flex items-centergap-4">
-          <AccountDropdown />
-
+        <div className="flex items-center gap-4">
+          {session.data && <AccountDropdown />}
+          {!session.data && (
+            <Button onClick={() => signIn()} variant="link">
+              <LogIn className="mr-2" /> Sign In
+            </Button>
+          )}
           <ModeToggle />
         </div>
       </div>
     </header>
   );
-};
+}
 
 export default Header;
