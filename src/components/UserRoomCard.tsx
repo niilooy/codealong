@@ -74,7 +74,7 @@ const UserRoomCard = ({ room }: { room: Room }) => {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => deleteRoomAction(room.id as string)}
+                onClick={() => deleteRoomAction(room.id)}
               >
                 Yes, delete
               </AlertDialogAction>

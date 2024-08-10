@@ -10,18 +10,18 @@ import {
 import { Button } from "../../components/ui/button";
 import TagsList from "../../components/TagsList";
 import { splitTags } from "@/lib/utils";
-import { Room, room } from "@/db/schema";
+import { Room } from "@/db/schema";
 import Link from "next/link";
 import { Github } from "lucide-react";
 
 const RoomCard = ({ room }: { room: Room }) => {
   return (
-    <Card>
+    <Card className="h-[300px] flex flex-col justify-between">
       <CardHeader>
         <CardTitle>{room.name}</CardTitle>
         <CardDescription>{room.description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-col gap-4 flex-grow">
         <TagsList tags={splitTags(room.tags)} />
         {room.githubRepo && (
           <Link

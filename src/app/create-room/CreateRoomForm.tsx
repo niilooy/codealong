@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { createRoomAction } from "./actions";
 import { useRouter } from "next/navigation";
+import { toast, useToast } from "@/components/ui/use-toast"; // Ensure this is the correct import
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -27,6 +28,7 @@ const formSchema = z.object({
 
 const CreateRoomForm = () => {
   const router = useRouter();
+  const { toast } = useToast();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,13 +39,17 @@ const CreateRoomForm = () => {
       githubRepo: "",
     },
   });
+
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     await createRoomAction(values);
-    router.push("/browse");
+    toast({
+      title: "Room Created",
+      description: "Hop in to find some coding buddies!",
+    });
+    router.push(`/your-rooms`);
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -55,7 +61,7 @@ const CreateRoomForm = () => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="My project name"/>
+                <Input {...field} placeholder="My project name" />
               </FormControl>
               <FormDescription>This is your public room name.</FormDescription>
               <FormMessage />
@@ -71,7 +77,7 @@ const CreateRoomForm = () => {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Working on this project..."/>
+                <Input {...field} placeholder="Working on this project..." />
               </FormControl>
               <FormDescription>
                 Please describe here what you will be working on
@@ -89,7 +95,10 @@ const CreateRoomForm = () => {
             <FormItem>
               <FormLabel>Tags</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="typescript, nextJS, tailwind, drizzle"/>
+                <Input
+                  {...field}
+                  placeholder="typescript, nextJS, tailwind, drizzle"
+                />
               </FormControl>
               <FormDescription>
                 List the programming languages, frameworks, libraries etc. you
@@ -108,7 +117,10 @@ const CreateRoomForm = () => {
             <FormItem>
               <FormLabel>Github Repo</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="https://github.com/myname/myproject"/>
+                <Input
+                  {...field}
+                  placeholder="https://github.com/myname/myproject"
+                />
               </FormControl>
               <FormDescription>
                 Please put a link to your project Github Repo

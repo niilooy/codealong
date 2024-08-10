@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { editRoomAction } from "./actions";
 import { useParams, useRouter } from "next/navigation";
 import { Room } from "@/db/schema";
+import { toast, useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -26,8 +27,9 @@ const formSchema = z.object({
   githubRepo: z.string().min(1).max(100),
 });
 
-const EditRoomForm = ({room} : {room : Room}) => {
-  const params = useParams()
+const EditRoomForm = ({ room }: { room: Room }) => {
+  const params = useParams();
+  const { toast } = useToast();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,7 +46,11 @@ const EditRoomForm = ({room} : {room : Room}) => {
     // ✅ This will be type-safe and validated.
     await editRoomAction({
       id: params.roomId as string,
-      ...values
+      ...values,
+    });
+    toast({
+      title: "Room Details Updated",
+      description: "Hop in to find some coding buddies!",
     });
   }
   return (
@@ -58,7 +64,7 @@ const EditRoomForm = ({room} : {room : Room}) => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="My project name"/>
+                <Input {...field} placeholder="My project name" />
               </FormControl>
               <FormDescription>This is your public room name.</FormDescription>
               <FormMessage />
@@ -74,7 +80,7 @@ const EditRoomForm = ({room} : {room : Room}) => {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Working on this project..."/>
+                <Input {...field} placeholder="Working on this project..." />
               </FormControl>
               <FormDescription>
                 Please describe here what you will be working on
@@ -92,7 +98,10 @@ const EditRoomForm = ({room} : {room : Room}) => {
             <FormItem>
               <FormLabel>Tags</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="typescript, nextJS, tailwind, drizzle"/>
+                <Input
+                  {...field}
+                  placeholder="typescript, nextJS, tailwind, drizzle"
+                />
               </FormControl>
               <FormDescription>
                 List the programming languages, frameworks, libraries etc. you
@@ -111,7 +120,10 @@ const EditRoomForm = ({room} : {room : Room}) => {
             <FormItem>
               <FormLabel>Github Repo</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="https://github.com/myname/myproject"/>
+                <Input
+                  {...field}
+                  placeholder="https://github.com/myname/myproject"
+                />
               </FormControl>
               <FormDescription>
                 Please put a link to your project Github Repo
