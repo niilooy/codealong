@@ -5,9 +5,12 @@ import Link from "next/link";
 import React from "react";
 import { CodealongVideoPlayer } from "./VideoPlayer";
 import { splitTags } from "@/lib/utils";
+import { unstable_noStore } from "next/cache";
 
 const RoomPage = async (props: { params: { roomId: string } }) => {
   const roomId = props.params.roomId;
+
+  unstable_noStore();
   const room = await getRoom(roomId);
 
   if (!room) {

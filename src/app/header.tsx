@@ -48,6 +48,7 @@ function AccountDropdown() {
 
 export function Header() {
   const session = useSession();
+  const isLoggedIn = !!session.data;
   return (
     <header className="bg-gray-100 py-2 dark:bg-gray-900 container mx-auto">
       <div className="flex justify-between items-center">
@@ -55,17 +56,25 @@ export function Header() {
           href="/"
           className="flex gap-2 items-center text-xl hover:underline"
         >
-          <Image
-            src="/logo.svg"
-            width={80}
-            height={80}
-            alt="logo"
-          />
+          <Image src="/logo.svg" width={80} height={80} alt="logo" />
         </Link>
 
+        <nav>
+          {isLoggedIn && (
+            <>
+              <Link className="hover:underline" href="/your-rooms">
+                Browse Rooms
+              </Link>
+              <Link className="hover:underline" href="/your-rooms">
+                Check Out Your Rooms
+              </Link>
+            </>
+          )}
+        </nav>
+
         <div className="flex items-center gap-4">
-          {session.data && <AccountDropdown />}
-          {!session.data && (
+          {isLoggedIn && <AccountDropdown />}
+          {!isLoggedIn && (
             <Button onClick={() => signIn()} variant="link">
               <LogIn className="mr-2" /> Sign In
             </Button>
