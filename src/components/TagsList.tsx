@@ -10,7 +10,7 @@ const TagsList = ({ tags }: { tags: string[] }) => {
     <div className="flex gap-2 flex-wrap">
       {tags.map((tag) => (
         <Badge
-          onClick={() => router.push(`/?search=${tag}`)}
+          onClick={() => router.push(`/browse/?search=${tag}`)}
           key={tag}
           className="w-fit cursor-pointer"
           role="button"

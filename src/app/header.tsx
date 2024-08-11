@@ -1,20 +1,20 @@
 "use client";
 
+import React from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
-import { signIn, signOut, useSession } from "next-auth/react";
-import React, { useState } from "react";
+import { LogIn, LogOut, Trash2 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogIn, LogOut, Trash2 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Image from "next/image";
-import Link from "next/link";
-import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,13 +24,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { deleteAccountAction } from "./actions";
-// better make this into a separate component.
+
 function AccountDropdown() {
-  const session = useSession();
-  const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
+  const [open, setOpen] = React.useState(false);
 
   return (
     <>
@@ -40,7 +39,7 @@ function AccountDropdown() {
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently remove your
-              account and any data your have.
+              account and any data you have.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -59,32 +58,22 @@ function AccountDropdown() {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant={"link"}>
-            <Avatar className="mr-2">
-              <AvatarImage src={session.data?.user?.image ?? ""} />
-              <AvatarFallback>CN</AvatarFallback>
+          <Button variant="ghost" className="flex items-center space-x-2">
+            <Avatar className="w-8 h-8">
+              <AvatarImage src={session?.user?.image ?? ""} />
+              <AvatarFallback>
+                {session?.user?.name?.charAt(0) ?? "U"}
+              </AvatarFallback>
             </Avatar>
-
-            {session.data?.user?.name}
+            <span className="text-sm font-medium">{session?.user?.name}</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() =>
-              signOut({
-                callbackUrl: "/",
-              })
-            }
-          >
-            <LogOut className="mr-2" /> Sign Out
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
+            <LogOut className="w-4 h-4 mr-2" /> Sign Out
           </DropdownMenuItem>
-
-          <DropdownMenuItem
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            <Trash2 className="mr-2" /> Delete Account
+          <DropdownMenuItem onClick={() => setOpen(true)}>
+            <Trash2 className="w-4 h-4 mr-2" /> Delete Account
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -92,40 +81,56 @@ function AccountDropdown() {
   );
 }
 
-export function Header() {
-  const session = useSession();
-  const isLoggedIn = !!session.data;
+function NavLink({ href, children } : {href: any, children: React.ReactNode}) {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
   return (
-    <header className="bg-gray-100 py-2 dark:bg-gray-900 z-10 relative">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link
-          href="/"
-          className="flex gap-2 items-center text-xl hover:underline"
-        >
-          <Image src="/logo.svg" width={80} height={80} alt="logo" />
-        </Link>
+    <Link href={href} passHref>
+      <span
+        className={`text-sm font-medium transition-colors duration-200 hover:text-primary ${
+          isActive
+            ? "text-primary border-primary"
+            : "text-muted-foreground hover:text-primary"
+        }`}
+      >
+        {children}
+      </span>
+    </Link>
+  );
+}
 
-        <nav className="flex gap-4">
-          {isLoggedIn && (
-            <>
-              <Link className="hover:underline" href="/browse">
-                Browse Public Rooms
-              </Link>
-              <Link className="hover:underline" href="/your-rooms">
-                Check Out Your Rooms
-              </Link>
-            </>
-          )}
-        </nav>
+export function Header() {
+  const { status } = useSession();
+  const isLoggedIn = status === "authenticated";
 
-        <div className="flex items-center gap-4">
-          {isLoggedIn && <AccountDropdown />}
-          {!isLoggedIn && (
-            <Button onClick={() => signIn()} variant="link">
-              <LogIn className="mr-2" /> Sign In
-            </Button>
-          )}
-          <ModeToggle />
+  return (
+    <header className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full border-b">
+      <div className="container mx-auto px-4">
+        <div className="flex h-16 items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Link href="/" passHref>
+              <span className="flex items-center space-x-2">
+                <Image src="/logo.svg" width={80} height={80} alt="logo" />
+              </span>
+            </Link>
+            {isLoggedIn && (
+              <nav className="flex items-center space-x-4">
+                <NavLink href="/browse">Browse Public Rooms</NavLink>
+                <NavLink href="/your-rooms">Check Out Your Rooms</NavLink>
+              </nav>
+            )}
+          </div>
+          <div className="flex items-center space-x-4">
+            {isLoggedIn ? (
+              <AccountDropdown />
+            ) : (
+              <Button onClick={() => signIn()} variant="ghost" size="sm">
+                <LogIn className="w-4 h-4 mr-2" /> Sign In
+              </Button>
+            )}
+            <ModeToggle />
+          </div>
         </div>
       </div>
     </header>
