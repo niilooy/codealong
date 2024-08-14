@@ -111,7 +111,7 @@ export function Header() {
           <div className="flex items-center space-x-4">
             <Link href="/" passHref>
               <span className="flex items-center space-x-2">
-                <Image src="/logo.svg" width={80} height={80} alt="logo" />
+                <Image src="/logo.svg" width={200} height={200} alt="logo" />
               </span>
             </Link>
             {isLoggedIn && (

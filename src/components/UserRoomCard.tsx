@@ -11,7 +11,7 @@ import {
 import { Button } from "./ui/button";
 import TagsList from "./TagsList";
 import { splitTags } from "@/lib/utils";
-import { Room, room } from "@/db/schema";
+import { Room } from "@/db/schema";
 import Link from "next/link";
 import { Github, Pencil, Trash2 } from "lucide-react";
 import {
@@ -29,37 +29,39 @@ import { deleteRoomAction } from "@/app/your-rooms/actions";
 
 const UserRoomCard = ({ room }: { room: Room }) => {
   return (
-    <Card>
-      <CardHeader className="relative">
-        <Button size={"icon"} className="absolute top-1 right-1">
+    <Card className="h-full flex flex-col justify-between">
+      <CardHeader className="relative flex-shrink-0">
+        <Button size="icon" className="absolute top-1 right-1 p-1">
           <Link href={`/edit-room/${room.id}`}>
-            <Pencil />
+            <Pencil className="w-4 h-4" />
           </Link>
         </Button>
-        <CardTitle>{room.name}</CardTitle>
-        <CardDescription>{room.description}</CardDescription>
+        <CardTitle className="text-lg sm:text-xl pr-8 truncate">{room.name}</CardTitle>
+        <CardDescription className="text-sm line-clamp-2">{room.description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <TagsList tags={splitTags(room.tags)} />
+      <CardContent className="flex flex-col gap-4 flex-grow">
+        <div className="flex-grow">
+          <TagsList tags={splitTags(room.tags)} />
+        </div>
         {room.githubRepo && (
           <Link
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-sm"
             href={room.githubRepo}
             target="blank"
             rel="noopener noreferrer"
           >
-            <Github />
-            GitHub
+            <Github className="w-4 h-4" />
+            <span className="truncate">GitHub</span>
           </Link>
         )}
       </CardContent>
-      <CardFooter className="flex gap-2">
+      <CardFooter className="flex-shrink-0 flex gap-2">
         <Button asChild>
           <Link href={`/rooms/${room.id}`}>Join Room</Link>
         </Button>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant={"destructive"}>
+            <Button variant="destructive" className="p-2">
               <Trash2 className="w-4 h-4" />
             </Button>
           </AlertDialogTrigger>
@@ -67,15 +69,12 @@ const UserRoomCard = ({ room }: { room: Room }) => {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                room.
+                This action cannot be undone. This will permanently delete your room.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => deleteRoomAction(room.id)}
-              >
+              <AlertDialogAction onClick={() => deleteRoomAction(room.id)}>
                 Yes, delete
               </AlertDialogAction>
             </AlertDialogFooter>

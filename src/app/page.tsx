@@ -20,19 +20,20 @@ export default function LandingPage() {
         <div className="mx-auto max-w-2xl py-12">
           <div className="text-center">
             <Image
-              className="inline-block"
+              className="inline-block mb-10"
               src="/logo.svg"
-              width="200"
-              height="200"
+              width="500"
+              height="500"
               alt="logo"
             />
 
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
-              Find other awesome devs to pair with online
+              Collaborate With Fellow Developers Online
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-200">
-              This platform is for sharing your screen and working with other
-              random developers online so that you can work together
+              Looking for coding buddies? Join our platform to connect with
+              other developers. Share screens, brainstorm, and tackle projects
+              together!
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
